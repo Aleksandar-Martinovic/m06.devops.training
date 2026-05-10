@@ -27,7 +27,6 @@ Add the following blocks, they should depend on the first block (initialization)
 - Artifact store `terraform.tfstate`.
 
 3. Interact with the table:
-   - run `alias aws="aws --endpoint-url=http://devops.tomfern.com:31566"`
    - list tables with `aws dynamodb list-tables`
    - describe the table with `aws dynamodb describe-table --table-name <your-table-name>`
    - insert a record:
