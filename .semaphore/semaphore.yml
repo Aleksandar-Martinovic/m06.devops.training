@@ -40,6 +40,7 @@ blocks:
             - cd 1-terraform-apply
             - artifact pull workflow .terraform
             - artifact pull workflow .terraform.lock.hcl
+            - chmod -R +x .terraform/providers
             - terraform destroy -auto-approve
       secrets:
         - name: localstack
