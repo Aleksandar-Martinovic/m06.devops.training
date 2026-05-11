@@ -67,7 +67,7 @@ blocks:
           commands:
             - checkout
             - cd 1-terraform-apply
-            - artifact pull workflow terraform.tfstate
+            - artifact pull workflow terraform.tfstate --force
             - BUCKET_NAME=$(terraform output -raw bucket_name)
             - AWS_ENDPOINT=$(terraform output -raw aws_endpoint)
             - aws --endpoint-url "$AWS_ENDPOINT" s3 ls
