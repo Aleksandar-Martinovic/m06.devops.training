@@ -24,6 +24,7 @@ blocks:
             - cd 1-terraform-apply
             - terraform init
             - artifact push workflow .terraform
+            - artifact push workflow .terraform.lock.hcl
             - terraform plan
             - terraform apply -auto-approve
       secrets:
@@ -38,6 +39,7 @@ blocks:
             - checkout
             - cd 1-terraform-apply
             - artifact pull workflow .terraform
+            - artifact pull workflow .terraform.lock.hcl
             - terraform destroy -auto-approve
       secrets:
         - name: localstack
