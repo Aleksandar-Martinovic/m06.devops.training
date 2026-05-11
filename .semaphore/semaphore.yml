@@ -21,22 +21,21 @@ blocks:
           commands:
             - checkout
             - aws s3 ls
+            - cd 1-terraform-apply
             - terraform init
-            - .terraform
             - artifact push workflow .terraform
             - terraform plan
             - terraform apply -auto-approve
-            - terraform destroy -auto-approve
       secrets:
         - name: localstack
-  - name: "\U0001F680 Deploy"
+  - name: Terraform Destroy
     dependencies:
       - "\U0001F9EA Terraform Apply"
     task:
       jobs:
-        - name: "\U0001F4E6 Deploy to Production"
+        - name: Terraform Destroy
           commands:
-            - echo "Building application..."
-            - echo "Running security checks..."
-            - echo "Deploying to production..."
-            - echo "Deployment completed successfully!"
+            - checkout
+            - cd 1-terraform-apply
+            - artifact pull workflow .terraform
+            - terraform destroy -auto-approve
