@@ -66,9 +66,10 @@ blocks:
         - name: Use S3 Bucket
           commands:
             - checkout
-            - 'aws s3 cp README.md s3://group1-Aleksandar/'
-            - 'aws s3 ls s3://group1-Aleksandar'
-            - 'aws s3 rm s3://group1-Aleksandar/README.md'
+            - cd 1-terraform-apply
+            - 'aws --endpoint-url http://devops.tomfern.com:31566 s3 cp README.md s3://group1-Aleksandar/'
+            - 'aws --endpoint-url http://devops.tomfern.com:31566 s3 ls s3://group1-Aleksandar'
+            - 'aws --endpoint-url http://devops.tomfern.com:31566 s3 rm s3://group1-Aleksandar/README.md'
       secrets:
         - name: localstack
   - name: Terraform Destroy
