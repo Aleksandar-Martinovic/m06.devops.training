@@ -39,3 +39,5 @@ blocks:
             - cd 1-terraform-apply
             - artifact pull workflow .terraform
             - terraform destroy -auto-approve
+      secrets:
+        - name: localstack
