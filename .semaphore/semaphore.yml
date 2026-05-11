@@ -27,6 +27,8 @@ blocks:
             - terraform plan
             - terraform apply -auto-approve
             - terraform destroy -auto-approve
+      secrets:
+        - name: localstack
   - name: "\U0001F680 Deploy"
     dependencies:
       - "\U0001F9EA Terraform Apply"
