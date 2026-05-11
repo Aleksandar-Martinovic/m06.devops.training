@@ -67,9 +67,12 @@ blocks:
           commands:
             - checkout
             - cd 1-terraform-apply
-            - aws s3 ls
-            - 'aws s3 cp README.md s3://group1-aleksandar/'
-            - 'aws s3 ls s3://group1-aleksandar'
-            - 'aws s3 rm s3://group1-aleksandar/README.md'
+            - artifact pull workflow terraform.tfstate
+            - BUCKET_NAME=$(terraform output -raw bucket_name)
+            - AWS_ENDPOINT=$(terraform output -raw aws_endpoint)
+            - aws --endpoint-url "$AWS_ENDPOINT" s3 ls
+            - 'aws --endpoint-url "$AWS_ENDPOINT" s3 cp README.md s3://$BUCKET_NAME/'
+            - 'aws --endpoint-url "$AWS_ENDPOINT" s3 ls s3://$BUCKET_NAME'
+            - 'aws --endpoint-url "$AWS_ENDPOINT" s3 rm s3://$BUCKET_NAME/README.md'
       secrets:
         - name: localstack
