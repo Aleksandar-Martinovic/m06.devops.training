@@ -55,6 +55,10 @@ blocks:
             - chmod -R +x .terraform/providers
             - terraform validate
             - terraform apply -auto-approve
+            - terraform state list
+            - terraform state show aws_s3_bucket.example
+            - aws s3 ls
+            - 'aws s3 ls s3://group1-aleksandar'
             - artifact push workflow terraform.tfstate
       secrets:
         - name: localstack
