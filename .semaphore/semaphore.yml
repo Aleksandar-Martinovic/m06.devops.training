@@ -24,7 +24,7 @@ blocks:
         - name: TF_VAR_AWS_SECRET_ACCESS_KEY
           value: $AWS_SECRET_ACCESS_KEY
       jobs:
-        - name: "\U0001F9EA Terraform Init"
+        - name: Terraform Init
           commands:
             - checkout
             - aws s3 ls
