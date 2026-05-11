@@ -68,9 +68,9 @@ blocks:
             - checkout
             - cd 1-terraform-apply
             - aws s3 ls
-            - 'aws s3 cp README.md s3://group1-Aleksandar/'
-            - 'aws s3 ls s3://group1-Aleksandar'
-            - 'aws s3 rm s3://group1-Aleksandar/README.md'
+            - 'aws s3 cp README.md s3://group1-aleksandar/'
+            - 'aws s3 ls s3://group1-aleksandar'
+            - 'aws s3 rm s3://group1-aleksandar/README.md'
       secrets:
         - name: localstack
   - name: Terraform Destroy
