@@ -13,11 +13,18 @@ auto_cancel:
   queued:
     when: branch = 'main'
 blocks:
-  - name: "\U0001F9EA Terraform Apply"
+  - name: Terraform Init
     dependencies: []
     task:
+      env_vars:
+        - name: TF_VAR_AWS_DEFAULT_REGION
+          value: us-east-1
+        - name: TF_VAR_AWS_ACCESS_KEY_ID
+          value: $AWS_ACCESS_KEY_ID
+        - name: TF_VAR_AWS_SECRET_ACCESS_KEY
+          value: $AWS_SECRET_ACCESS_KEY
       jobs:
-        - name: "\U0001F9EA Terraform Apply"
+        - name: "\U0001F9EA Terraform Init"
           commands:
             - checkout
             - aws s3 ls
@@ -25,14 +32,56 @@ blocks:
             - terraform init
             - artifact push workflow .terraform
             - artifact push workflow .terraform.lock.hcl
-            - terraform plan
+      secrets:
+        - name: localstack
+  - name: Terraform Deploy
+    dependencies:
+      - Terraform Init
+    task:
+      env_vars:
+        - name: TF_VAR_AWS_DEFAULT_REGION
+          value: us-east-1
+        - name: TF_VAR_AWS_ACCESS_KEY_ID
+          value: $AWS_ACCESS_KEY_ID
+        - name: TF_VAR_AWS_SECRET_ACCESS_KEY
+          value: $AWS_SECRET_ACCESS_KEY
+      jobs:
+        - name: Terraform Deploy
+          commands:
+            - checkout
+            - cd 1-terraform-apply
+            - artifact pull workflow .terraform
+            - artifact pull workflow .terraform.lock.hcl
+            - chmod -R +x .terraform/providers
+            - terraform validate
             - terraform apply -auto-approve
+            - artifact push workflow terraform.tfstate
+      secrets:
+        - name: localstack
+  - name: Use S3 Bucket
+    dependencies:
+      - Terraform Deploy
+    task:
+      jobs:
+        - name: Use S3 Bucket
+          commands:
+            - checkout
+            - 'aws s3 cp README.md s3://group1-Aleksandar/'
+            - 'aws s3 ls s3://group1-Aleksandar'
+            - 'aws s3 rm s3://group1-Aleksandar/README.md'
       secrets:
         - name: localstack
   - name: Terraform Destroy
     dependencies:
-      - "\U0001F9EA Terraform Apply"
+      - Use S3 Bucket
     task:
+      env_vars:
+        - name: TF_VAR_AWS_DEFAULT_REGION
+          value: us-east-1
+        - name: TF_VAR_AWS_ACCESS_KEY_ID
+          value: $AWS_ACCESS_KEY_ID
+        - name: TF_VAR_AWS_SECRET_ACCESS_KEY
+          value: $AWS_SECRET_ACCESS_KEY
       jobs:
         - name: Terraform Destroy
           commands:
@@ -40,6 +89,7 @@ blocks:
             - cd 1-terraform-apply
             - artifact pull workflow .terraform
             - artifact pull workflow .terraform.lock.hcl
+            - artifact pull workflow terraform.tfstate
             - chmod -R +x .terraform/providers
             - terraform destroy -auto-approve
       secrets:
